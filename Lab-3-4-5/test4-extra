@@ -1,0 +1,103 @@
+# Cau mo rong: nhap mang so va xuat ra mang chu
+.data
+In: .asciiz "Nhap chuoi so: "
+sokhong: .asciiz "Zero"
+mot: .asciiz "One"
+hai: .asciiz "Two"
+ba: .asciiz "Three"
+bon: .asciiz "Four"
+nam: .asciiz "Five"
+sau: .asciiz "Six"
+bay: .asciiz "Seven"
+sotam: .asciiz "Eight"
+chin: .asciiz "Nine"
+check: .asciiz " "
+string:.space 100
+.text
+
+li $v0,4
+la $a0,In
+syscall
+					# Nhap chuoi so 
+li $v0,8
+la $a0,string
+li $a1,100
+syscall
+
+					# Y tuong dua tren 1 vong lap for va so sanh de di toi cac ham xuat
+la $s0,string				
+li $t0,0				# khoi tao i=0 
+					
+while:
+add $t1,$s0,$t0				# truy cap den dia chi cua phan tu thu i va gan cho thanh ghi tam 1
+lb $t2,0($t1)				# gan gia tri cua phan tu thu i cho thanh ghi tam 2
+beqz $t2,Exit				# kiem tra thanh ghi tam 2 co gia tri !=0 khong, neu =0 break
+beq $t2,48,vo				# cac ham so sanh bang ma ascii de di toi cac ham tuong ung
+beq $t2,49,nhat
+beq $t2,50,nhi
+beq $t2,51,tam
+beq $t2,52,tu
+beq $t2,53,ngu
+beq $t2,54,luc
+beq $t2,55,that
+beq $t2,56,bat
+beq $t2,57,cuu
+
+increase:				# ham tang i++
+addi $t0,$t0,1
+j while
+					# ham thuc hien lenh xuat
+command:
+li $v0,4
+move $a0,$t3
+syscall
+					# xuat khoang trang 
+li $v0,4
+la $a0,check
+syscall
+j increase
+					# cac ham gan dia chi cua chuoi ki tu tuong ung voi so
+vo:
+la $t3,sokhong
+j command
+
+nhat:
+la $t3,mot
+j command
+
+nhi:
+la $t3,hai
+j command
+
+tam:
+la $t3,ba
+j command
+
+tu:
+la $t3,bon
+j command
+
+ngu:
+la $t3,nam
+j command
+
+luc:
+la $t3,sau
+j command
+
+that:
+la $t3,bay
+j command
+
+bat:
+la $t3,sotam
+j command
+
+cuu:
+la $t3,chin
+j command
+
+Exit:					# END LOOP
+					
+
+

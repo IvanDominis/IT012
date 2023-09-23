@@ -1,0 +1,40 @@
+# Nhap 1 mang, tinh tong cac phan tu
+.data
+num: .asciiz "Nhap so luong phan tu: "
+inArray: .asciiz "Nhap mang: \n" 
+sum: .asciiz "\nTong cac phan tu: "
+array: .space 100
+.text
+
+li $v0,4
+la $a0,num
+syscall
+				# Nhap so phan tu cua mang
+li $v0,5			
+syscall
+move $t0,$v0			
+				# Nhap cac phan tu cua mang
+li $v0,4
+la $a0,inArray
+syscall
+
+sll $t0,$t0,2           	
+la $t2,array			
+add $t0,$t0,$t2			
+move $t3,$zero			# gan sum=0
+				
+while:				# while(i<n)
+li $v0,5			# cin>>x;
+syscall				
+sb $v0,0($t2)			# a[i]=x;
+add $t3,$t3,$v0			# sum=sum+x;
+addi $t2,$t2,4			# i++; 
+blt $t2,$t0,while		
+
+li $v0,4
+la $a0,sum
+syscall
+
+li $v0,1
+la $a0,($t3)
+syscall

@@ -1,0 +1,51 @@
+# Nhap chuoi, doi thuong thanh hoa, hoa thanh thuong
+.data
+In: .asciiz "Nhap chuoi: "
+Out: .asciiz "Chuoi sau khi bien doi: "
+string: .space 100
+.text
+li $v0,4
+la $a0,In
+syscall
+				# Nhap chuoi
+li $v0,8
+la $a0,string
+li $a1,100
+syscall
+la $s0,string
+li $t0,0
+
+while:
+add $t1,$s0,$t0			# truy cap den phan tu thu i, gan cho thanh ghi tam 1			
+lb $t2,0($t1)			# gan ki tu vao thanh ghi tam 2	
+beqz $t2,Exit			# dieu kien break
+bge $t2,97,low			# neu >=97 xet tiep
+bge $t2,65,up			# neu >=65 xet tiep
+j increase			# tiep tuc vong lap
+
+increase:			# xuat ra  ki tu va tang i
+li $v0,11
+la $a0,($t2)	
+syscall
+addi $t0,$t0,1
+j while
+				
+low:
+ble $t2,122,low1		# neu <=122 la chu thuong
+j increase
+
+low1:
+sub $t2,$t2,32			# bien thuong thanh hoa
+j increase
+
+up:				
+ble $t2,90,up1			# neu <=90 la chu hoa
+j increase
+
+up1:
+add $t2,$t2,32			# bien hoa thanh thuong
+j increase
+
+Exit:				# END
+li $v0,10
+syscall

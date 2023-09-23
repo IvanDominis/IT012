@@ -1,0 +1,68 @@
+# Nhap 1 mang, tim va xuat ra min, max cua mang vua nhap.
+.data
+num: .asciiz "Nhap so luong phan tu: "
+inArray: .asciiz "Nhap mang: \n" 
+Max: "So lon nhat: "
+Min: "\nSo nho nhat: "
+array: .space 100
+.text
+li $v0,4
+la $a0,num
+syscall
+				# Nhap so phan tu cua mang ,n
+li $v0,5			
+syscall
+move $t0,$v0			
+				# Nhap cac phan tu cua mang
+li $v0,4
+la $a0,inArray
+syscall
+
+sll $t0,$t0,2           	# dich sang trai 2 bit
+la $t2,array			# gan dia chi cua mang cho $t2 ,co the xem nhu la chi so cua mang i
+add $t0,$t0,$t2			# gan dia chi cua phan tu cuoi cung cua mang cho $t0, co the xem la n
+add $t4,$t4,0			# max=0
+add $t5,$t6,0			# min=0
+				
+while:				# while(i<n)
+li $v0,5			# cin>>x;
+syscall				
+sb $v0,0($t2)			# a[i]=x;			
+addi $t2,$t2,4			# i++; tuong duong tang 4 bit
+beq $t5,$t6,setsmall		# if(min==null) min=x;
+bgt $v0,$t4,big			# if(x>max) max=x;
+blt $v0,$t5,small		# if(x<min) min=x;
+blt $t2,$t0,while		# if(i<n) continue; else break;
+j xuat
+
+big:
+move $t4,$v0
+blt $t2,$t0,while
+j xuat
+
+small:
+move $t5,$v0
+blt $t2,$t0,while
+j xuat
+
+setsmall:
+move $t5,$v0
+blt $t2,$t0,while
+j xuat
+
+xuat:
+li $v0,4
+la $a0,Max
+syscall
+
+li $v0,1
+la $a0,($t4)
+syscall
+
+li $v0,4
+la $a0,Min
+syscall
+
+li $v0,1
+la $a0,($t5)
+syscall

@@ -1,0 +1,80 @@
+# Cau a: Nhap vao 1 ki tu, xuat ki tu lien truoc, lien sau va xuat ra kieu ( hoa, thuong, so, khonghople)
+.data
+In: .asciiz "Nhap ki tu: "
+OutHead: .asciiz "\nKi tu lien truoc la: "
+OutTail: .asciiz "\nKi tu lien sau la: "
+UpperCase: .asciiz "\nChu hoa "
+LowerCase: .asciiz "\nChu thuong "
+OutNum: .asciiz "\nSo "
+OutInvalid: .asciiz "\nInvalid type "
+a:.word
+.text
+					# Nhap 1 ki tu ngau nhien
+li $v0,4
+la $a0,In
+syscall
+
+li $v0, 12
+syscall
+move $t0,$v0
+
+					# Xuat ki tu lien truoc, lien sau
+subiu $t1,$t0,1
+addiu $t2,$t0,1
+li $v0,4
+la $a0,OutHead
+syscall
+	
+li $v0,11
+la $a0,($t1)
+syscall
+	
+li $v0, 4
+la $a0,OutTail
+syscall
+
+li $v0,11
+la $a0,($t2)
+syscall
+	
+					# Kiem tra kieu ki tu ( hoa, thuong, so, khong hop le)
+li $v0, 4
+blt $t0,48,Invalid			# Ma ascii <48 khong hop le
+ble $t0,57,Number			# Ma ascii <=57 la so
+blt $t0,65,Invalid			# 58-64 la khoang ki tu dac biet
+bgt $t0,65,Case1			# Xet truong hop la chu thuong va chu hoa
+syscall
+
+Case1:					# Neu ki tu vao co ma ascii : <=90 la chu hoa, >=97 thi xet tiep, ko thi invalid type
+ble $t0,90,Upper
+bge $t0,97,Case2
+j Invalid
+
+Case2:    				# Neu ki tu vao co ma ascii : <=122 la chu thuong, ko thi invalid type
+ble $t0,122,Lower		
+j Invalid
+
+					# Cac ham xuat kieu ki tu
+Upper: 	
+la $a0,UpperCase
+syscall
+j Exit
+	
+Lower: 
+la $a0,LowerCase
+syscall
+j Exit
+
+Number:	
+la $a0,OutNum
+syscall
+j Exit
+	
+Invalid:	
+la $a0,OutInvalid
+syscall
+j Exit
+	
+Exit:
+li $v0,10
+syscall

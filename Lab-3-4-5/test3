@@ -1,0 +1,70 @@
+.data
+# cau a : Xuat 2 chuoi co san 
+string1: .asciiz "Chao ban! Ban la sinh vien nam thu may?\n"	
+string2: .asciiz "Hihi, minh la sinh vien nam thu 1 ^-^\n"
+# cau b : Nhap vao 1 chuoi roi xuat ra chuoi vua nhap
+In: .asciiz "Nhap chuoi: "	
+Out: .asciiz "Chuoi vua nhap la: "	
+string: .space 100
+# cau c : Tinh tong 2 so nguyen
+In1: .asciiz "Nhap so thu nhat: " 	
+In2: .asciiz "Nhap so thu hai: "
+Out1: .asciiz "Tong cua 2 so: "
+a: .word
+b: .word
+.text 
+					# cau a : xuat 2 chuoi 
+li $v0,4
+la $a0,string1
+syscall
+
+li $v0,4
+la $a0,string2
+syscall
+
+					# cau b : Nhap,xuat 1 chuoi
+li $v0,4
+la $a0,In
+syscall
+	
+li $v0,8				
+la $a0,string
+li $a1,100
+syscall
+move $a3,$a0
+
+li $v0,4
+la $a0,Out
+syscall
+move $a0,$a3
+				
+li $v0,4
+la $a0,string
+syscall
+move $a3,$a0
+					# cau c : Tong 2 so nguyen
+li $v0,4
+la $a0,In1
+syscall
+	
+li $v0,5
+la $s0,a
+syscall
+move $s0,$v0
+	
+li $v0,4
+la $a0,In2
+syscall
+	
+li $v0,5
+la $s1,b
+syscall
+move $s1,$v0
+	
+li $v0,4
+la $a0,Out1
+syscall
+	
+li $v0,1
+add $a0,$s0,$s1
+syscall

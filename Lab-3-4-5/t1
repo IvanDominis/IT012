@@ -1,0 +1,32 @@
+.data
+	input: .space 50
+	thongbao: .asciiz "nhap: "
+.text
+	li $v0,4
+	la $a0, thongbao
+	syscall
+	
+	li $v0,8
+	la $a0,input
+	li $a1,50
+	syscall
+	
+	la $s0,input
+	li $s1,0
+	
+LOOP:
+	add $t2,$s0,$s1
+	lb $s3,0($t2)
+	beqz $s3,EXIT
+	bge $s3,97,TRU
+	j XUAT
+TRU:
+	sub $s3,$s3,32
+	j XUAT
+XUAT:
+	li $v0,11
+	la $a0,($s3)
+	syscall
+	add $s1,$s1,1
+	j LOOP
+EXIT:
